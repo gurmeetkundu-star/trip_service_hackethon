@@ -1,4 +1,5 @@
 import { TripModel } from "../models/tripModel.js";
+import { publishTripUpdate } from "../services/mqttService.js";
 
 export const TripController = {
   async getAll(req, res) {
@@ -18,6 +19,7 @@ export const TripController = {
 
   async update(req, res) {
     const updatedTrip = await TripModel.update(req.params.id, req.body);
+    publishTripUpdate(updatedTrip);
     res.json(updatedTrip);
   },
 
