@@ -1,16 +1,22 @@
 import mqtt from 'mqtt';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const brokerUrl = 'mqtts://w66aeaae.ala.asia-southeast1.emqxsl.com:8883';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const brokerUrl = 'mqtts://172.236.95.200:8883';
+
+// Read the CA certificate
+const caPath = path.join(__dirname, '../../certs/mqtt-ca.crt');
+const ca = fs.readFileSync(caPath);
+
 const options = {
-    username: 'prashant.singh',
-    password: 'hackathon',
-    rejectUnauthorized: false // Since it's CA signed but we might not have the CA file handy, or for dev purposes. 
-    // Ideally we should use the system CA or provide the CA file. 
-    // Given the prompt says "TLS Mode: CA signed server certificate", it usually means public CA, so rejectUnauthorized: true (default) should work if node has the CA.
-    // However, sometimes in these environments it's safer to try with true first, if it fails, debug. 
-    // Let's stick to default (true) first, but if it fails we might need to adjust.
-    // Actually, for simplicity in a hackathon context, if it fails I'll switch.
-    // Let's try to connect first.
+    username: 'admin',
+    password: 'admin123',
+    ca: ca,
+    rejectUnauthorized: true // Now we can properly verify with our CA certificate
 };
 
 // The prompt says "Protocol: MQTT + TLS", which is mqtts.
