@@ -14,6 +14,7 @@ export const TripController = {
 
   async create(req, res) {
     const newTrip = await TripModel.create(req.body);
+    publishTripUpdate(newTrip);
     res.status(201).json(newTrip);
   },
 
